@@ -18,7 +18,13 @@ Now check again Your Default Interpreter.\
 If you want to Revert /bin/sh Back to Dash.\
 `sudo ln -sf /bin/dash /bin/sh`
 
-## Before run script Update users inside of script
+## Create script file and assign executable permissions
+
+`touch aws-users.sh`
+
+`chmod -R 700 aws-users.sh`
+
+## pest he following script and before run script Update users inside of script
 
 ```bash
 #!/bin/bash
