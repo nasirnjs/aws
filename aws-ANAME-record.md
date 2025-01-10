@@ -1,5 +1,5 @@
 
-# Understanding ANAME Records
+# Understanding AWS ANAME Records
 
 **ANAME** records are distinct from **A** records and offer a unique solution for scenarios where using a **CNAME** isn't possible or appropriate—particularly at the zone apex (root domain).
 
