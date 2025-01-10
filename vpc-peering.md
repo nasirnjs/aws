@@ -10,7 +10,7 @@
      - CIDR Block: `10.0.0.0/16`
    - **VPC B**:
      - Name: `VPC-B`
-     - CIDR Block: `10.1.0.0/16`
+     - CIDR Block: `11.0.0.0/16`
 3. Ensure the CIDR ranges of the two VPCs do not overlap.
 
 ---
@@ -39,8 +39,12 @@
      - **Availability Zone**: Choose any.
 2. For **VPC B**:
    - Repeat the steps for `VPC-B`:
+   - Click **Create Subnet**.
+   - Choose `VPC-B`.
+   - Provide:
      - **Name**: `Subnet-B`
-     - **CIDR Block**: `10.1.1.0/24`
+     - **CIDR Block**: `11.0.2.0/24`
+     - **Availability Zone**: Choose any.
 
 ---
 
@@ -52,8 +56,8 @@
    - Associate it with `VPC-A`.
 2. For **VPC B**:
    - Repeat the steps for `VPC-B`:
-     - Name it `RouteTable-B`.
-
+   - Name it `RouteTable-B`.
+   - Associate it with `VPC-B`.
 ---
 
 ## Step 5: Associate Subnets and Internet Gateways with Route Tables
@@ -62,22 +66,23 @@
    - Add a route:
      - **Destination**: `0.0.0.0/0`
      - **Target**: `IGW-A`.
-   - Associate `Subnet-A` with `RouteTable-A`.
+   - Associate `Subnet-A` with `RouteTable-VPC-A`.
 2. **VPC B**:
    - Select `RouteTable-B`.
    - Add a route:
      - **Destination**: `0.0.0.0/0`
      - **Target**: `IGW-B`.
-   - Associate `Subnet-B` with `RouteTable-B`.
+   - Associate `Subnet-B` with `RouteTable-VPC-B`.
 
 ---
 
 ## Step 6: Create a VPC Peering Connection
 1. Go to **VPC Peering Connections** in the VPC Console.
 2. Click **Create VPC Peering Connection**.
+   - **Give a Peering name**: `VPC-A-to-VPC-B`.
    - **Requester VPC**: `VPC-A`.
    - **Accepter VPC**: `VPC-B`.
-   - Add a name, e.g., `VPC-A-to-VPC-B`.
+   
 3. Click **Create Peering Connection**.
 
 ---
@@ -93,7 +98,7 @@
 1. **For VPC A**:
    - Select `RouteTable-A`.
    - Add a route:
-     - **Destination**: `10.1.0.0/16` (CIDR of VPC-B).
+     - **Destination**: `11.0.0.0/16` (CIDR of VPC-B).
      - **Target**: Select the VPC Peering Connection.
 2. **For VPC B**:
    - Select `RouteTable-B`.
@@ -107,7 +112,7 @@
 1. Launch EC2 instances in `Subnet-A` and `Subnet-B`.
 2. Assign public IPs or Elastic IPs to both instances.
 3. Update **security groups** to allow ICMP traffic (ping) between the instances:
-   - Inbound rule: Allow traffic from `10.0.0.0/16` for `VPC-A` and `10.1.0.0/16` for `VPC-B`.
+   - Inbound rule: Allow traffic from `11.0.0.0/16` for `VPC-A` and `10.0.0.0/16` for `VPC-B`.
 4. Connect to one instance and ping the other instance's private IP.
 
 ---
