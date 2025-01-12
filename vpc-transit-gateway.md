@@ -44,7 +44,8 @@
    - Enable "Auto-assign Public IP."
    - Attach a security group allowing:
      - **ICMP** (ping)
-     - **SSH** (port 22).
+     - **SSH** (port 22)
+     - **http** (port 80)
 
 ---
 
