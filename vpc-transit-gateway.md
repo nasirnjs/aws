@@ -4,28 +4,27 @@
 1. **Create 3 VPCs**:
    - Name them `staging-vpc-a`, `staging-vpc-b`, and `staging-vpc-c`.
    - Ensure each VPC has unique CIDR blocks:
-     - `staging-vpc-a`: `10.0.0.0/16`
-     - `staging-vpc-b`: `10.1.0.0/16`
-     - `staging-vpc-c`: `10.2.0.0/16`
+     - `staging-vpc-a`: `11.0.0.0/16`
+     - `staging-vpc-b`: `12.0.0.0/16`
+     - `staging-vpc-c`: `13.0.0.0/16`
 
 ---
 
 ## Step 2: Create and Attach Internet Gateways
 1. **Create an Internet Gateway (IGW)** for each VPC:
    - Name them `igw-staging-vpc-a`, `igw-staging-vpc-b`, `igw-staging-vpc-c`.
-2. **Attach each IGW** to its respective VPC.
+2. **Attach each IGW** to its respective VPC `staging-vpc-a`, `staging-vpc-b`, and `staging-vpc-c`.
 
 ---
 
 ## Step 3: Create Public Subnets
 1. **Create Public Subnets**:
-   - Create one public subnet for each VPC.
+   - Create one public subnet for each VPC, select VPC `staging-vpc-a`, `staging-vpc-b`, and `staging-vpc-c` during create of VPC subnet.
    - Use unique CIDR blocks within each VPC:
-     - `staging-vpc-a`: `10.0.1.0/24`
-     - `staging-vpc-b`: `10.1.1.0/24`
-     - `staging-vpc-c`: `10.2.1.0/24`
-   - Enable "Auto-assign public IPv4" for these subnets.
-
+     - `staging-vpc-a-subnet-1a`: `11.0.1.0/24`
+     - `staging-vpc-b-subnet-1a`: `12.0.2.0/24`
+     - `staging-vpc-c-subnet-1a`: `13.0.3.0/24`
+     - 
 ---
 
 ## Step 4: Create Route Tables
@@ -59,15 +58,14 @@
 ## Step 7: Attach VPCs to the Transit Gateway
 1. **Create TGW Attachments**:
    - Attach each VPC to the Transit Gateway.
-   - Use the appropriate subnets for the attachments:
-     - `staging-vpc-a`: `staging-vpc-a-subnet`
-     - `staging-vpc-b`: `staging-vpc-b-subnet`
-     - `staging-vpc-c`: `staging-vpc-c-subnet`
    - Name attachments:
      - `tgw-attachment-staging-vpc-a`
      - `tgw-attachment-staging-vpc-b`
      - `tgw-attachment-staging-vpc-c`.
-
+   - Use the appropriate subnets for the attachments:
+     - `staging-vpc-a`: `staging-vpc-a-subnet`
+     - `staging-vpc-b`: `staging-vpc-b-subnet`
+     - `staging-vpc-c`: `staging-vpc-c-subnet`
 ---
 
 ## Step 8: Update Route Tables for Inter-VPC Communication
