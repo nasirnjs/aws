@@ -10,6 +10,7 @@ EC2 Section
 create target group name prod-nginx-tg and keep everything is default
 Create a Security group prod-ec2-tg-sg for ALB allow http and https select vpc prod-vpc
 Create Application LoadBalancer prod-nginx-tg-alb select intenet facing vpc and subnetes, security group prod-ec2-tg-sg, Listernner and routing select prod-nginx-tg Target group
+Create a lunch template, allow ssh, http and https enable autoassign public IP don't need to select subnet
 create autoscalling group
 
  
