@@ -122,4 +122,73 @@ Delete replication configuration.\
 
 **batch job or bucket replications**
 
-**S3 Cloud Front Distribution** 01:25
+**S3 Cloud Front Distribution**
+
+
+
+**Amazon S3 bucket policy that grants public read access to all objects in the bucket**
+
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "PublicReadGetObject",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::test-bycket/*"
+        }
+    ]
+}
+```
+
+# AWS S3 Block Public Access Settings
+
+## 1. Block Public Access to Buckets and Objects Granted Through New Access Control Lists (ACLs)
+**What it Does:**  
+Prevents the creation of new public ACLs for buckets or objects. Existing ACLs that grant public access remain unchanged.
+
+**Use Case:**  
+You want to enforce a policy where no future objects or buckets can accidentally be set to public using ACLs while keeping the existing ones intact.
+
+**Example:**
+- **Before Enabling:** A user can upload an object and assign it a `public-read` ACL, making it accessible to anyone.
+- **After Enabling:** Attempts to set `public-read` ACLs on new objects or buckets are blocked.
+
+---
+
+## 2. Block Public Access to Buckets and Objects Granted Through Any Access Control Lists (ACLs)
+**What it Does:**  
+Completely disables public access granted through any existing or new ACLs.
+
+**Use Case:**  
+You want to ensure that ACLs cannot be used to grant public access, even if they were created in the past.
+
+**Example:**  
+If an object already has a `public-read` ACL, enabling this setting will override it, ensuring the object is no longer publicly accessible.
+
+---
+
+## 3. Block Public Access to Buckets and Objects Granted Through New Public Bucket or Access Point Policies
+**What it Does:**  
+Prevents the creation of new bucket or access point policies that grant public access.
+
+**Use Case:**  
+You want to maintain strict access control by ensuring no new policies can expose your data publicly, while keeping existing policies intact for legacy applications.
+
+**Example:**
+- **Before Enabling:** A developer can create a bucket policy that allows `s3:GetObject` for all users (`Principal: *`).
+- **After Enabling:** Attempts to create such policies are blocked.
+
+---
+
+## 4. Block Public and Cross-Account Access to Buckets and Objects Through Any Public Bucket or Access Point Policies
+**What it Does:**  
+Ignores all public or cross-account access granted through bucket or access point policies.
+
+**Use Case:**  
+You want to strictly prevent any public or cross-account access to your bucket, regardless of existing bucket policies.
+
+**Example:**  
+If a bucket policy allows access to a specific external account or makes it public, enabling this setting will override and ignore that policy.
