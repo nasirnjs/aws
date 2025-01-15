@@ -24,8 +24,8 @@ accounts:
 resource-types:
   includes:
   # S3
-  - S3Object
-  - S3Bucket
+  #- S3Object
+  #- S3Bucket
   # EC2 + EBS/EFS + Load Balancer + ASG
   - EC2Instance
   - EC2NATGateway
