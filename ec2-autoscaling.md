@@ -31,12 +31,19 @@
 - **Name**: `prod-nginx-tg`
 - **Configuration**: Keep default settings
 
-### Step 2: Create Security Group
+### Step 2: Create 2 Security Group for ALB & EC2 Auto Scaling Group
 - **Name**: `prod-alb-sg` (for ALB)
 - **Inbound Rules**:
   - **HTTP (Port 80)**
   - **HTTPS (Port 443)**
 - **Select VPC**: `prod-vpc`
+
+- **Name**: `prod-asg-sg` (for ALB)
+- **Inbound Rules**:
+  - **SSH (Port 22)**
+  - **HTTP (Port 80)**
+  - **HTTPS (Port 443)**
+- **Note**: You can allow trafic from only LAB Security Group for enhance security.
 
 ### Step 3: Create Application Load Balancer (ALB)
 - **Name**: `prod-nginx-tg-alb`
@@ -44,17 +51,19 @@
 - **Select VPC**: `prod-vpc`
 - **Select Subnets**: `prod-public-subnet-1a`, `prod-public-subnet-1b`
 - **Attach Security Group**: `prod-alb-sg`
-- **Configure Listeners and Routing**:
+- **Configure Listeners and Routing**: `prod-asg-sg`
   - **Listener**: HTTP (Port 80)
   - **Routing**: Target Group: `prod-nginx-tg`
 
 ### Step 4: Create Launch Template
-- **Inbound Rules**:
-  - **SSH (Port 22)**
-  - **HTTP (Port 80)**
-  - **HTTPS (Port 443)**
-- **Enable Auto-assign Public IP**
+- **Name**: `ec2-auto-scal-launch-tem
+- **Launch template contents**: Quick Start
+- **Network settings**: Select your vpc `prod-vpc`
 - **Subnet**: Do not select (Auto Scaling will handle it)
+- **Select Security Group**:
+- **Adjust Storage**: As your need 
+- **Advanced network configuration**: Enable Auto-assign Public IP
+
 
 ---
 
@@ -92,3 +101,17 @@
 
 
 
+```bash
+#!/bin/bash
+# Update and install Nginx
+apt update -y
+apt install -y nginx
+
+# Start and enable Nginx service
+systemctl start nginx
+systemctl enable nginx
+
+# Add the private IP address to the index.html file
+echo "<h1>This message from: $(hostname -i)</h1>" > /var/www/html/index.html
+
+```
