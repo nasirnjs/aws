@@ -207,13 +207,13 @@ EBS Multi-Attach is a feature of Amazon Elastic Block Store (EBS) that allows a 
 - Now check from Secondary Node mount point
 
 <p align="center">
-  <img src="./ref-image/gfs-primary-node.png" alt="Primary Node" title="Primary Node" height="350" width="850"/>
+  <img src="./ref-image/gfs-primary-node.png" alt="Primary Node" title="Primary Node" height="450" width="850"/>
   <br/>
   Pic: Primary Node
 </p>
 
 <p align="center">
-  <img src="./ref-image/gfs-secondary-node.png" alt="Secondary Node" title="Secondary Node" height="350" width="850"/>
+  <img src="./ref-image/gfs-secondary-node.png" alt="Secondary Node" title="Secondary Node" height="450" width="850"/>
   <br/>
   Pic: Secondary Node
 </p>
