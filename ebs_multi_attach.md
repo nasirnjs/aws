@@ -1,7 +1,34 @@
 
-<h2> Replicated GlusterFS Cluster on AWS EC2 via EBS </h2>
+<h2> Setting Up a GlusterFS Cluster on AWS EC2 with EBS Multi-Attach for Data Replication </h2>
 
 This guide walks you through setting up a replicated GlusterFS cluster using AWS EC2 instances and EBS volumes with Multi-Attach support. This setup provides high availability and shared storage across multiple instances.
+
+**Table of Contents**
+- [GlusterFS](#glusterfs)
+- [EBS Multi-Attach](#ebs-multi-attach)
+- [Key Benefits of EBS Multi-Attach with Synchronization](#key-benefits-of-ebs-multi-attach-with-synchronization)
+  - [Prerequisites](#prerequisites)
+- [Steps 1 Create Two EC2 Instances and One EBS Volumes](#steps-1-create-two-ec2-instances-and-one-ebs-volumes)
+  - [1. Create EC2 Instances and EBS Volumes](#1-create-ec2-instances-and-ebs-volumes)
+- [Steps 2: Format and Mount EBS Volumes](#steps-2-format-and-mount-ebs-volumes)
+  - [2.1 Verify EBS Volume Connection](#21-verify-ebs-volume-connection)
+  - [2.2 Format the EBS Volume from Primary](#22-format-the-ebs-volume-from-primary)
+  - [2.3 Mount the EBS Volume both (Primary \& Secondary) EC2 Instance](#23-mount-the-ebs-volume-both-primary--secondary-ec2-instance)
+- [Steps 3: Install GlusterFS](#steps-3-install-glusterfs)
+  - [3.1 Install GlusterFS on Both Instances](#31-install-glusterfs-on-both-instances)
+  - [3.2 Start GlusterFS Service on Both Instances](#32-start-glusterfs-service-on-both-instances)
+- [Steps 4: Set Up GlusterFS Cluster](#steps-4-set-up-glusterfs-cluster)
+  - [4.1 Peer Probe from Primary](#41-peer-probe-from-primary)
+- [Steps 5: Create GlusterFS Volume](#steps-5-create-glusterfs-volume)
+  - [5.1 Create Shared Volume from Primary](#51-create-shared-volume-from-primary)
+  - [5.2 Start the GlusterFS Volume from Primary](#52-start-the-glusterfs-volume-from-primary)
+- [Steps 6: Mount GlusterFS Volume Both Instances](#steps-6-mount-glusterfs-volume-both-instances)
+  - [6.1 Mount the GlusterFS Volume on Both Instances](#61-mount-the-glusterfs-volume-on-both-instances)
+- [Steps 7: Auto-Mount EBS Volume on Reboot](#steps-7-auto-mount-ebs-volume-on-reboot)
+  - [7.1 Add to `/etc/fstab`](#71-add-to-etcfstab)
+  - [7.2 File Synchronization Between Primary and Secondary Nodes](#72-file-synchronization-between-primary-and-secondary-nodes)
+  - [7.3 Monitoring GlusterFS Volume](#73-monitoring-glusterfs-volume)
+- [Conclusion](#conclusion)
 
 
 ## GlusterFS
@@ -10,12 +37,18 @@ GlusterFS is an open-source, distributed file system that aggregates storage res
 ## EBS Multi-Attach
 EBS Multi-Attach is a feature of Amazon Elastic Block Store (EBS) that allows a single EBS volume to be simultaneously attached to multiple EC2 instances within the same availability zone. This capability is particularly beneficial for clustered applications like GlusterFS, as it enables shared storage access while maintaining consistency and reliability.
 
-## Key Benefits of EBS Multi-Attach
-- High Availability: Ensures data accessibility even if one instance fails.
-- Performance: Each instance can achieve the full performance of the EBS volume.
-- Consistency: Enables multiple nodes to access and modify data simultaneously with consistent performance.
+## Key Benefits of EBS Multi-Attach with Synchronization
 
-## Solution Overview
+- **High Availability**: Data remains accessible from multiple EC2 instances, ensuring continuous availability even during instance failures.
+
+- **Performance**:  Each EC2 instance attached to the EBS volume achieves full performance, reducing bottlenecks and improving throughput.
+
+- **Consistency**:  Changes made on one node are immediately reflected across all attached instances, maintaining data consistency.
+
+- **Fault Tolerance**:  The system can tolerate instance or network failures without affecting data accessibility due to data redundancy across nodes.
+
+- **Real-Time Synchronization**:  Instantly synchronizes changes between nodes, ensuring all attached instances have up-to-date data for seamless operation.
+
 
 ### Prerequisites
 
@@ -33,19 +66,8 @@ EBS Multi-Attach is a feature of Amazon Elastic Block Store (EBS) that allows a 
 - SSH access to EC2 instances (ensure both instances have public IPs).
 - External EBS Multi-Attach enabled for volumes.
 
-## Steps Overview
 
-1.  **Create EC2 Instances and EBS Volumes**
-2.  **Attach EBS Volumes to Both Instances**
-3.  **Format and Mount EBS Volumes**
-4.  **Install GlusterFS and Set Up Cluster**
-5.  **Create GlusterFS Volume and Mount Shared Storage**
-6.  **Auto-mount EBS Volume on Instance Reboot**
-
-
-----------
-
-## Steps
+## Steps 1 Create Two EC2 Instances and One EBS Volumes
 
 ### 1. Create EC2 Instances and EBS Volumes
 
@@ -60,7 +82,7 @@ EBS Multi-Attach is a feature of Amazon Elastic Block Store (EBS) that allows a 
 1.3 **Attach EBS Volume to Both Instances**
 - Attach the created EBS volume to both instances.
 
-## Step 2: Format and Mount EBS Volumes  
+## Steps 2: Format and Mount EBS Volumes  
 
 ### 2.1 Verify EBS Volume Connection  
 - SSH into both EC2 instances.  
@@ -92,7 +114,7 @@ EBS Multi-Attach is a feature of Amazon Elastic Block Store (EBS) that allows a 
 </p>
 
 
-## Step 3: Install GlusterFS
+## Steps 3: Install GlusterFS
 
 ### 3.1 Install GlusterFS on Both Instances
 
@@ -116,7 +138,7 @@ EBS Multi-Attach is a feature of Amazon Elastic Block Store (EBS) that allows a 
     sudo systemctl restart glusterd
     sudo systemctl status glusterd
     ```
-## Step 4: Set Up GlusterFS Cluster
+## Steps 4: Set Up GlusterFS Cluster
 
 ### 4.1 Peer Probe from Primary
 
@@ -130,7 +152,7 @@ EBS Multi-Attach is a feature of Amazon Elastic Block Store (EBS) that allows a 
     
 -   If successful, the output will display: `Success`.
     
-## Step 5: Create GlusterFS Volume
+## Steps 5: Create GlusterFS Volume
 
 ### 5.1 Create Shared Volume from Primary
 
@@ -150,7 +172,7 @@ EBS Multi-Attach is a feature of Amazon Elastic Block Store (EBS) that allows a 
 
     `sudo gluster volume status ebs-shared-vol`
     
-## Step 6: Mount GlusterFS Volume Both Instances
+## Steps 6: Mount GlusterFS Volume Both Instances
 
 ### 6.1 Mount the GlusterFS Volume on Both Instances
 
@@ -162,22 +184,24 @@ EBS Multi-Attach is a feature of Amazon Elastic Block Store (EBS) that allows a 
     
     ```bash
     sudo mount -t glusterfs <primary_instance_privateIP>:/shared-volume /mnt/shared
-
+    Example:
     sudo mount -t glusterfs 10.0.1.227:/ebs-shared-vol /mnt/shared
     
     ```
 -   Verify that the GlusterFS volume is mounted correctly by creating or updating a file in the `/mnt/shared` directory on either instance.
     
-## Step 7: Auto-Mount EBS Volume on Reboot
+## Steps 7: Auto-Mount EBS Volume on Reboot
 
 ### 7.1 Add to `/etc/fstab`
 
 -   Edit `/etc/fstab` to automatically mount the EBS volume on reboot:
     
     `echo '/dev/nvme1n1 /home/ubuntu/ebs-vol xfs defaults 0 0' | sudo tee -a /etc/fstab`
+
+    `mount -a`
     
 
-### 7.2 
+### 7.2 File Synchronization Between Primary and Secondary Nodes
 - Crate file from Primary Node mount point and check from secondary node mount point
 - Create file from Secondary Node and check from Primary Node
 - Now check from Secondary Node mount point
