@@ -108,7 +108,7 @@ EBS Multi-Attach is a feature of Amazon Elastic Block Store (EBS) that allows a 
   `sudo df -h /home/ubuntu/ebs-vol`
 
 <p align="center">
-  <img src="./ref-image/format-volume.png" alt="Formate and mount volume" title="Formate and mount volume" height="350" width="750"/>
+  <img src="./ref-image/format-volume.png" alt="Formate and mount volume" title="Formate and mount volume" height="350" width="800"/>
   <br/>
   Pic: Formate and mount volume
 </p>
@@ -207,13 +207,13 @@ EBS Multi-Attach is a feature of Amazon Elastic Block Store (EBS) that allows a 
 - Now check from Secondary Node mount point
 
 <p align="center">
-  <img src="./ref-image/gfs-primary-node.png" alt="Primary Node" title="Primary Node" height="350" width="750"/>
+  <img src="./ref-image/gfs-primary-node.png" alt="Primary Node" title="Primary Node" height="350" width="850"/>
   <br/>
   Pic: Primary Node
 </p>
 
 <p align="center">
-  <img src="./ref-image/gfs-secondary-node.png" alt="Secondary Node" title="Secondary Node" height="350" width="750"/>
+  <img src="./ref-image/gfs-secondary-node.png" alt="Secondary Node" title="Secondary Node" height="350" width="850"/>
   <br/>
   Pic: Secondary Node
 </p>
