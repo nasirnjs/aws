@@ -18,6 +18,8 @@ A **clustered storage system** is a distributed network of storage devices that 
 ## Prerequisites
 
 -   Minimum 2 EC2 instances
+-   Suported EC2 Instances are General Purpose:`m5`, `m5d`, `m5a`, `m5ad`, `m5n`, `m5dn`, `m6i`, `m6id` Compute Optimized: `c5`, `c5d`, `c5a`, `c5ad`, `c5n`, `c6i`, `c6id` Memory Optimized: `r5`, `r5d`, `r5a`, `r5ad`, `r5n`, `r5dn`, `r6i`, `r6id` Storage Optimized: `i3en`, `i4i` Accelerated Computing: `p3dn.24xlarge`, `p4d`
+-   Security Group for allow both EC2 Instance Glusterfs Port
 -   Both instances in the same AWS region and availability zone
 -   Tested on AWS Provided Ubuntu 24.04 LTS
 -   EBS Volume Type: Provisioned IOPS SSD (io2) to support Multi-Attach
@@ -33,20 +35,18 @@ A **clustered storage system** is a distributed network of storage devices that 
 6.  **Auto-mount EBS Volume on Instance Reboot**
 
 
-### Respective Diagram
-![enter image description here](./diadram.drawio.png)
 ----------
 
-## Step 1: Create EC2 Instances and EBS Volumes
+## Step 1: Create Two EC2 Instances and One EBS Volumes
 
-### 1.1 Create EC2 Instances
+### 1.1 Create 2 EC2 Instances
 
 -   Create 2 EC2 instances in the same region and availability zone on aws console.
 -   Assign public IPs to the instances so that they can be accessed via SSH.
 
-### 1.2 Create EBS Volumes (io2)
+### 1.2 Create 1 EBS Volumes, type should be (io2)
 
--   Create two EBS volumes with the type **Provisioned IOPS SSD (io2)**.
+-   Create One EBS volumes with the type **Provisioned IOPS SSD (io2)**.
 -   Ensure that these volumes are in the same availability zone as your EC2 instances.
 -   Enable **Multi-Attach** for both volumes so they can be attached to multiple instances.
 
@@ -62,46 +62,31 @@ A **clustered storage system** is a distributed network of storage devices that 
 
 -   SSH into both EC2 instances and verify the connection of the EBS volume by running:
     
-    ```bash
-    lsblk
-    
-    ```
+    `sudo lsblk`
     
 -   Ensure that the volume is attached to the instance.
     
 
-### 2.2 Format the EBS Volume
+### 2.2 Format the EBS Volume from Primary
 
 -   Format the EBS volume once on either of the instances (only format it once for the shared file system):
     
-    ```bash
-    sudo mkfs.xfs /dev/nvme1n1  # Replace 'nvme1n1' with your disk name
-    
-    ```
+    `sudo mkfs.xfs /dev/nvme1n1`  `#Replace 'nvme1n1' with your disk name`
     
 
-### 2.3 Mount the EBS Volume
+### 2.3 Mount the EBS Volume both ec2 instance
 
 -   Create a directory to mount the EBS volume:
     
-    ```bash
-    sudo mkdir /home/ubuntu/data
-    
-    ```
+    `sudo mkdir /home/ubuntu/ebs-vol`
     
 -   Mount the EBS volume to the newly created directory:
     
-    ```bash
-    sudo mount /dev/nvme1n1 /home/ubuntu/data
-    
-    ```
+    `sudo mount /dev/nvme1n1 /home/ubuntu/ebs-vol`
     
 -   Verify the mount:
     
-    ```bash
-    df -h /home/ubuntu/data
-    
-    ```
+    `sudo df -h /home/ubuntu/ebs-vol`
     
 
 ----------
@@ -120,13 +105,16 @@ A **clustered storage system** is a distributed network of storage devices that 
     ```
     
 
-### 3.2 Start GlusterFS Service
+### 3.2 Start GlusterFS Service on Both Instances
 
 -   Start the GlusterFS service on both instances:
     
     ```bash
     sudo systemctl start glusterd
     sudo systemctl enable glusterd
+    sudo systemctl daemon-reload
+    sudo systemctl restart glusterd
+    sudo systemctl status glusterd
     
     ```
     
@@ -135,16 +123,15 @@ A **clustered storage system** is a distributed network of storage devices that 
 
 ## Step 4: Set Up GlusterFS Cluster
 
-### 4.1 Peer Probe
+### 4.1 Peer Probe from primary
 
 -   Choose one instance as the primary and the other as the secondary.
     
 -   On the **primary instance**, run the following command to add the secondary instance to the cluster:
     
-    ```bash
-    sudo gluster peer probe <secondary_instance_privateIP>
-    
-    ```
+    `sudo gluster peer probe <secondary_instance_privateIP>`
+
+    `sudo gluster peer probe 10.0.1.213`
     
 -   If successful, the output will display: `Success`.
     
@@ -153,24 +140,23 @@ A **clustered storage system** is a distributed network of storage devices that 
 
 ## Step 5: Create GlusterFS Volume
 
-### 5.1 Create Shared Volume
+### 5.1 Create Shared Volume from primary
 
 -   On the **primary instance**, create a GlusterFS volume called `shared-volume` using the mounted EBS volumes. This volume will be replicated across both instances:
     
     ```bash
-    sudo gluster volume create shared-volume replica 2 transport tcp <primary_instance_privateIP>:/home/ubuntu/data <secondary_instance_privateIP>:/home/ubuntu/data force
+    sudo gluster volume create ebs-shared-vol replica 2 transport tcp <primary_instance_privateIP>:/home/ubuntu/data <secondary_instance_privateIP>:/home/ubuntu/data force
+    Example:
+    sudo gluster volume create ebs-shared-vol replica 2 transport tcp 172.31.24.63:/home/ubuntu/ebs-vol 172.31.17.20:/home/ubuntu/ebs-vol force
     
     ```
     
 
-### 5.2 Start the GlusterFS Volume
+### 5.2 Start the GlusterFS Volume from Primary
 
 -   Start the `shared-volume` on both instances:
     
-    ```bash
-    sudo gluster volume start shared-volume
-    
-    ```
+    `sudo gluster volume start ebs-shared-vol`
     
 
 ----------
@@ -190,6 +176,8 @@ A **clustered storage system** is a distributed network of storage devices that 
     
     ```bash
     sudo mount -t glusterfs <primary_instance_privateIP>:/shared-volume /mnt/shared
+
+    sudo mount -t glusterfs 10.0.1.227:/ebs-shared-vol /mnt/shared
     
     ```
     
@@ -205,7 +193,7 @@ A **clustered storage system** is a distributed network of storage devices that 
 -   Edit `/etc/fstab` to automatically mount the EBS volume on reboot:
     
     ```bash
-    echo '/dev/nvme1n1 /home/ubuntu/data xfs defaults 0 0' | sudo tee -a /etc/fstab
+    echo '/dev/nvme1n1 /home/ubuntu/ebs-vol xfs defaults 0 0' | sudo tee -a /etc/fstab
     
     ```
     
