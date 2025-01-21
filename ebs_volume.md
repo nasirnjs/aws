@@ -82,3 +82,11 @@ sudo mount -a
 Check if the volume is mounted.\
 `df -h`
 
+
+
+
+<p align="center">
+  <img src="./ref-image/aws-ebs-volume.png" alt="EBS Volume" title="EBS Volume" height="350" width="800"/>
+  <br/>
+  Pic: EBS Volume
+</p>
