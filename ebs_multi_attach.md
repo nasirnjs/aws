@@ -77,6 +77,12 @@ EBS Multi-Attach is a feature of Amazon Elastic Block Store (EBS) that allows a 
 - Initially, allow all TCP ports for unrestricted communication between the two EC2 instances.
 - Later, refine the configuration by limiting traffic to the exact required ports.
 
+<p align="center">
+  <img src="./ref-image/ebs-multiattach-sg.png" alt="Allow all TCP ports for unrestricted communication between the two EC2 instances" title="Allow all TCP ports for unrestricted communication between the two EC2 instances" height="350" width="800"/>
+  <br/>
+  Pic: Allow all TCP ports for unrestricted communication between the two EC2 instances
+</p>
+
 1.2 **Create Two EC2 Instances**
 - Create two EC2 instances in the same region and availability zone.
 - Assign public IPs to both instances for SSH access.
