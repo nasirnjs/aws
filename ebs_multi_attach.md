@@ -71,15 +71,21 @@ EBS Multi-Attach is a feature of Amazon Elastic Block Store (EBS) that allows a 
 
 ### 1. Create EC2 Instances and EBS Volumes
 
-1.1 **Create Two EC2 Instances**
+1.1 **Create Security Group**
+- Create a security group that allows inbound traffic on ports 80, 443, and 22, along with any other required ports.
+- Next, edit security groups to allow all TCP traffic between instances using the same security group.
+- Initially, allow all TCP ports for unrestricted communication between the two EC2 instances.
+- Later, refine the configuration by limiting traffic to the exact required ports.
+
+1.2 **Create Two EC2 Instances**
 - Create two EC2 instances in the same region and availability zone.
 - Assign public IPs to both instances for SSH access.
 
-1.2 **Create One EBS Volume**
+1.3 **Create One EBS Volume**
 - Create an **io2** EBS volume in the same availability zone as the EC2 instances.
 - Enable **Multi-Attach** for the volume.
 
-1.3 **Attach EBS Volume to Both Instances**
+1.4 **Attach EBS Volume to Both Instances**
 - Attach the created EBS volume to both instances.
 
 ## Steps 2: Format and Mount EBS Volumes  
