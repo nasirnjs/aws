@@ -18,7 +18,8 @@ This guide walks you through setting up a replicated GlusterFS cluster using AWS
   - [3.1 Install GlusterFS on Both Instances](#31-install-glusterfs-on-both-instances)
   - [3.2 Start GlusterFS Service on Both Instances](#32-start-glusterfs-service-on-both-instances)
 - [Steps 4: Set Up GlusterFS Cluster](#steps-4-set-up-glusterfs-cluster)
-  - [4.1 Peer Probe from Primary](#41-peer-probe-from-primary)
+  - [4.1 Setup GlusterFS Cluster shared directory ownsership and environment defaults, both Primary and Secondary Server.](#41-setup-glusterfs-cluster-shared-directory-ownsership-and-environment-defaults-both-primary-and-secondary-server)
+  - [4.2 Peer Probe from Primary](#42-peer-probe-from-primary)
 - [Steps 5: Create GlusterFS Volume](#steps-5-create-glusterfs-volume)
   - [5.1 Create Shared Volume from Primary](#51-create-shared-volume-from-primary)
   - [5.2 Start the GlusterFS Volume from Primary](#52-start-the-glusterfs-volume-from-primary)
@@ -28,6 +29,7 @@ This guide walks you through setting up a replicated GlusterFS cluster using AWS
   - [7.1 Add to `/etc/fstab`](#71-add-to-etcfstab)
   - [7.2 File Synchronization Between Primary and Secondary Nodes](#72-file-synchronization-between-primary-and-secondary-nodes)
   - [7.3 Monitoring GlusterFS Volume](#73-monitoring-glusterfs-volume)
+  - [7.4 These commands should help you troubleshoot](#74-these-commands-should-help-you-troubleshoot)
 - [Conclusion](#conclusion)
 
 
@@ -152,7 +154,15 @@ EBS Multi-Attach is a feature of Amazon Elastic Block Store (EBS) that allows a 
     ```
 ## Steps 4: Set Up GlusterFS Cluster
 
-### 4.1 Peer Probe from Primary
+### 4.1 Setup GlusterFS Cluster shared directory ownsership and environment defaults, both Primary and Secondary Server.
+
+`sudo chown -R gluster:gluster /home/ubuntu/ebs-vol`
+
+
+Uncomments `GLUSTERD_OPTIONS=''`\
+`sudo vim /etc/default/glusterd`
+
+### 4.2 Peer Probe from Primary
 
 -   Choose one instance as the primary and the other as the secondary.
     
@@ -237,9 +247,32 @@ EBS Multi-Attach is a feature of Amazon Elastic Block Store (EBS) that allows a 
     sudo tail -f /var/log/glusterfs/brick.log`
     sudo gluster volume status ebs-shared-vol
     ```
+### 7.4 These commands should help you troubleshoot
+Here are some additional GlusterFS troubleshooting commands based on your earlier queries, which can help you identify and resolve issues
+
+    ```
+    sudo gluster volume info
+    sudo gluster volume status
+    sudo gluster volume stop <volume_name>
+    sudo gluster volume delete <volume_name>
+    sudo systemctl status glusterd.service
+    sudo journalctl -xeu glusterd.service
+    sudo netstat -tuln | grep -E '24007|24008'
+    sudo gluster peer status
+    sudo gluster volume heal <volume_name> status
+    sudo gluster volume status <volume_name> detail
+    sudo mount | grep glusterfs
+    sudo cat /var/log/glusterfs/glusterd.log
+    sudo cat /var/log/glusterfs/brick/<brick_name>/brick.log
+    sudo gluster volume usage <volume_name>
+    sudo gluster volume get <volume_name> all
+    ```
+
 
 ## Conclusion
 
 You have successfully set up a clustered storage system using GlusterFS with shared EBS volumes in AWS. The shared storage is now accessible from both EC2 instances, and the GlusterFS volume ensures that data is synchronized between the two instances.
+
+
 
 
