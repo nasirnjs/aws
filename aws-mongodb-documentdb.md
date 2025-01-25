@@ -122,7 +122,7 @@ mongodb://root:pAT3T6PmnalbmRl@127.0.0.1:27017/?directConnection=true&serverSele
 
 [References 3](https://docs.aws.amazon.com/documentdb/latest/developerguide/connect-from-outside-a-vpc.html)
 
-[References 2](https://levelup.gitconnected.com/spring-boot-with-amazon-documentdb-2623d7b6cf43)
+[References 4](https://levelup.gitconnected.com/spring-boot-with-amazon-documentdb-2623d7b6cf43)
 
-[References 3](https://www.youtube.com/watch?v=a224dfdfwgc)
+[References 5](https://www.youtube.com/watch?v=a224dfdfwgc)
 
