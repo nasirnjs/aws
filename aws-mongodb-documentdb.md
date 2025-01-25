@@ -20,7 +20,7 @@
    - The DocumentDB security group should allow traffic `27017` port from the Bastion Host security group `bastion-host-sg`.
 
 <p align="center">
-  <img src="./ref-image/mongodb-sg.png" alt="Security Groups for bastion host and mongodb" title="Security Groups for bastion host and mongodb" height="100" width="800"/>
+  <img src="./ref-image/mongodb-sg.png" alt="Security Groups for bastion host and mongodb" title="Security Groups for bastion host and mongodb" height="130" width="800"/>
  <br/>
   Pic: Security Groups for bastion host and mongodb
 
