@@ -102,7 +102,7 @@ mongosh --tlsAllowInvalidHostnames --tls --tlsCAFile global-bundle.pem --usernam
 Establish a new connection, paste the connection string, and configure the certificate in the TLS/SSL settings. Select the certificate bundle, verify the tlsAllowInvalidHostnames parameter, and then click "Connect.
 
 <p align="center">
-  <img src="./ref-image/mongodb-compass-tls.png" alt="MongoDB Compass connection string, and point to the certificate in the TLS/SsL configurations" title="MongoDB Compass connection string, and point to the certificate in the TLS/SsL configurations" height="450" width="800"/>
+  <img src="./ref-image/mongodb-compass-tls.png" alt="MongoDB Compass connection string, and point to the certificate in the TLS/SsL configurations" title="MongoDB Compass connection string, and point to the certificate in the TLS/SsL configurations" height="500" width="800"/>
   <br/>
   Pic: MongoDB Compass connection string, and point to the certificate in the TLS/SsL configurations
 </p>
