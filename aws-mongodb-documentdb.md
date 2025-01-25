@@ -63,7 +63,9 @@ The next step is to create an EC2 instance in the same Region and VPC that you u
 
 ## Steps 4: Test SSH Connection with bastion host EC2 instance
 
-`ssh -i "nasir-desktop-ohia.pem" ubuntu@ec2-34-229-221-164.compute-1.amazonaws.com`
+```
+ssh -i "nasir-desktop-ohia.pem" ubuntu@ec2-34-229-221-164.compute-1.amazonaws.com
+```
 
 ## Steps 5: Download the public key for Amazon DocumentDB from AWS
 
@@ -74,7 +76,9 @@ Transport Layer Security (TLS) is enabled on your Amazon DocumentDB cluster, you
 
 ## Steps 6: Set up an SSH tunnel to the Amazon DocumentDB cluster
 
-`ssh -i "nasir-dekstop-ohia.pem" -L 27017:docdb-2025-01-24-19-30-29.cluster-cryusegsgush.us-east-2.docdb.amazonaws.com:27017 ubuntu@ec2-3-14-142-76.us-east-2.compute.amazonaws.com -N`
+```
+ssh -i "nasir-dekstop-ohia.pem" -L 27017:docdb-2025-01-24-19-30-29.cluster-cryusegsgush.us-east-2.docdb.amazonaws.com:27017 ubuntu@ec2-3-14-142-76.us-east-2.compute.amazonaws.com -N
+```
 
 **Explanation**
 
@@ -88,7 +92,9 @@ Transport Layer Security (TLS) is enabled on your Amazon DocumentDB cluster, you
 
 ## Steps 7: To connect to your Amazon DocumentDB cluster from your Local machine
 
-`mongosh --tlsAllowInvalidHostnames --tls --tlsCAFile global-bundle.pem --username root --password pATXXYYZZmRl  mongosh --retryWrites=false`
+```
+mongosh --tlsAllowInvalidHostnames --tls --tlsCAFile global-bundle.pem --username root --password pATXXYYZZmRl  mongosh --retryWrites=false
+```
 
 
 ## From MongoDB Compass
@@ -102,7 +108,9 @@ Establish a new connection, paste the connection string, and configure the certi
 </p>
 
 Replace the connection string with your own. Here's an example of mine for reference.\
-`mongodb://root:pAT3T6PmnalbmRl@127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&tlsAllowInvalidHostnames=true&tls=true&tlsCAFile=global-bundle.pem`
+```
+mongodb://root:pAT3T6PmnalbmRl@127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&tlsAllowInvalidHostnames=true&tls=true&tlsCAFile=global-bundle.pem
+```
 
 
 🎉 Congratulations! You have successfully connected to AWS DocumentDB from your local machine. 🚀🎊
