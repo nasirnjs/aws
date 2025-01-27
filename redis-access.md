@@ -3,6 +3,13 @@
 
 To access an **AWS ElastiCache Redis** instance from your local machine, you can use **SSH tunneling** through an EC2 instance. Below are the steps to securely access the Redis instance.
 
+
+<p align="center">
+  <img src="./ref-image/redis-connection-from-local.png" alt="Architecture to connect AWS ElastiCache Redis from Local" title="Architecture to connect AWS ElastiCache Redis from Local" height="200" width="900"/>
+  <br/>
+  Pic: Architecture to connect AWS ElastiCache Redis from Local
+</p>
+
 ## Steps to Access ElastiCache Redis from Your Local Machine:
 
 ### 1. **Create an EC2 Instance (if you don't have one already)**
@@ -54,7 +61,7 @@ ssh -i "nasir-office.pem" -L 6379:clustercfg.ym-redis-cluster.lnurfj.use1.cache.
 redis-cli -h 127.0.0.1 -p 6379 -a your-redis-password --timeout 600
 
 ```
-**Check Redis replay do ping if everything ok, you will get back replay PONG**
+**3.3 Check Redis replay do ping if everything ok, you will get back replay PONG**
 
 ```
 ping
