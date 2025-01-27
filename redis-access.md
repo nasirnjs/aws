@@ -30,7 +30,7 @@ To access an **AWS ElastiCache Redis** instance from your local machine, you can
 
 Connec to EC2 Instance.
 ```
-ssh -i "nasir-office.pem" ubuntu@ec2-107-20-26-142.compute-1.amazonaws.com
+ssh -i "nasir-ec2.pem" ubuntu@ec2-107-20-26-142.compute-1.amazonaws.com
 ```
 Installs the Redis CLI tools package, which includes the redis-cli command.
 ```
@@ -53,8 +53,15 @@ To securely access Redis through the EC2 instance, we will set up an SSH tunnel 
 
 **3.1 SSH Tunnel Command:**
 ```
-ssh -i "nasir-office.pem" -L 6379:clustercfg.ym-redis-cluster.lnurfj.use1.cache.amazonaws.com:6379 ubuntu@ec2-107-20-26-142.compute-1.amazonaws.com -N
+ssh -i "nasir-ec2.pem" -L 6379:clustercfg.ym-redis-cluster.lnurfj.use1.cache.amazonaws.com:6379 ubuntu@ec2-107-20-26-142.compute-1.amazonaws.com -N
 ```
+**Explanation**
+- ssh: Initiates an SSH connection.
+- i "nasir-ec2.pem": Specifies the private key file (nasir-ec2.pem) for authentication.
+- L 6379:clustercfg.ym-redis-cluster.lnurfj.use1.cache.amazonaws.com:6379: 
+- - Forwards the local port 6379 on your machine to the port 6379 on the AWS ElastiCache Redis endpoint clustercfg.ym-redis-cluster.lnurfj.use1.cache.amazonaws.com. This allows you to access the Redis cluster locally as if it were running on your machine.
+- ubuntu@ec2-107-20-26-142.compute-1.amazonaws.com: Specifies the bastion host's public IP/DNS and the username (ubuntu) to connect to the EC2 instance.
+- N: Instructs SSH not to execute remote commands; the session is used exclusively for port forwarding.
 
 **3.2 Now Connect Redis Cluster from Local machine**
 ```
@@ -68,9 +75,9 @@ ping
 ```
 
 <p align="center">
-  <img src="./ref-image/redish.png" alt="Connect to AWS ElastiCache Redis from Local" title="Connect to AWS ElastiCache Redis from Local" height="550" width="900"/>
+  <img src="./ref-image/redish.png" alt="SSH Tunnel Connect to AWS ElastiCache Redis from Local" title="SSH Tunnel Connect to AWS ElastiCache Redis from Local" height="550" width="900"/>
   <br/>
-  Pic: Connect to AWS ElastiCache Redis from Local
+  Pic: SSH Tunnel Connect to AWS ElastiCache Redis from Local
 </p>
 
 🎉 Congratulations! 🎉
