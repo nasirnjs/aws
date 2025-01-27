@@ -1,29 +1,3 @@
-Access ElastiCache Redis from Your Local Machine
-
-
-Test SSH Connection from your Loal machine
-```
-ssh -i "your-keypair.pem" -L local_port:redis_endpoint:redis_port ec2-user@ec2_instance_public_ip
-```
-
-SSH Tunnel with Local Machine.
-
-```
-ssh -i "nasir-office.pem" -L 6379:clustercfg.ym-redis-cluster.lnurfj.use1.cache.amazonaws.com:6379 ubuntu@ec2-107-20-26-142.compute-1.amazonaws.com -N
-```
-
-Redish Connection test from EC2 Instance
-```
-redis-cli --tls -h clustercfg.ym-redis-cluster.lnurfj.use1.cache.amazonaws.com -p 6379 -a 8rm47QhB8x9mrkH5M2O9
-```
-
-
-
-Now connection from your local Machine
-```
-redis-cli -h localhost --tls -p 6379 -a 8rm47QhB8x9mrkH5M2O9
-```
-
 
 # Access AWS ElastiCache Redis from Your Local Machine
 
