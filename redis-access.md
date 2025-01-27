@@ -14,10 +14,10 @@ To access an **AWS ElastiCache Redis** instance from your local machine, you can
 ### 2. **Configure Security Groups**
 
 **2.1 For ElastiCache Redis:**
-  - Ensure that the **security group** attached to your ElastiCache cluster allows inbound traffic from the EC2 instance (on port `6379`).
+  - Ensure that the **security group** attached to your ElastiCache cluster allows inbound traffic from the EC2 instance on port `6379`.
   
 **2.2 For EC2 Instance:**
-  - The **security group** of the EC2 instance should allow **SSH traffic** from your IP address (on port `22`).
+  - The **security group** of the EC2 instance should allow **SSH traffic** from your IP address on port `22`.
 
 ### Connect to EC2 Instance and check redis from EC2 Instance
 
@@ -25,16 +25,17 @@ Connec to EC2 Instance.
 ```
 ssh -i "nasir-office.pem" ubuntu@ec2-107-20-26-142.compute-1.amazonaws.com
 ```
-Install Redis Cli Tools
+Installs the Redis CLI tools package, which includes the redis-cli command.
 ```
 sudo apt update 
 sudo apt install redis-tools -y
 
 ```
 
-Connect to AES Redis Cluster.
+Connect to AWS Redis Cluster.
 ```
 redis-cli --tls -h clustercfg.ym-redis-cluster.lnurfj.use1.cache.amazonaws.com -p 6379 -a your-redis-password
+
 ping
 ```
 
@@ -53,14 +54,22 @@ ssh -i "nasir-office.pem" -L 6379:clustercfg.ym-redis-cluster.lnurfj.use1.cache.
 redis-cli -h 127.0.0.1 -p 6379 -a your-redis-password --timeout 600
 
 ```
-**Check Redis replay do ping if everything ok, you will get back replay pong**
+**Check Redis replay do ping if everything ok, you will get back replay PONG**
 
 ```
 ping
 ```
 
 <p align="center">
-  <img src="./ref-image/redish.png" alt="Connect to AWS ElastiCache Redis from Local" title="Connect to AWS ElastiCache Redis from Local" height="650" width="800"/>
+  <img src="./ref-image/redish.png" alt="Connect to AWS ElastiCache Redis from Local" title="Connect to AWS ElastiCache Redis from Local" height="550" width="900"/>
   <br/>
   Pic: Connect to AWS ElastiCache Redis from Local
 </p>
+
+🎉 Congratulations! 🎉
+
+You have successfully connected to your AWS ElastiCache Redis Cluster! 🚀
+
+Your setup is now ready to handle Redis operations securely and efficiently. Test it further with commands like PONG to ensure smooth functionality.
+
+Happy caching! 😊
