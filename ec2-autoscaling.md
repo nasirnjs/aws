@@ -1,5 +1,5 @@
 # AWS EC2 Auto Scaling Setup Guide
-
+An EC2 Auto Scaling Group (ASG) is a feature in AWS that automatically adjusts the number of EC2 instances in your application based on demand. Whether you need to scale up during peak traffic or scale down during off-peak times, the Auto Scaling Group ensures that you always have the right number of instances running. This helps you maintain application performance, availability, and cost efficiency without manual intervention.
 ## 1. VPC Setup
 
 ### Step 1: Create VPC
@@ -27,12 +27,12 @@
 
 ## 2. EC2 Setup
 
-### Step 1: Create Target Group
+### Step 2.1: Create Target Group
 A Target Group ensures your Auto Scaling Group dynamically manages traffic distribution, health checks, and scaling, leading to a reliable, highly available application.
 - **Name**: `prod-nginx-tg`
 - **Configuration**: Keep default settings
 
-### Step 2: Create 2 Security Group for ALB & EC2 Auto Scaling Group
+### Step 2.2: Create 2 Security Group for ALB & EC2 Auto Scaling Group
 - **Name**: `prod-alb-sg` (for ALB)
 - **Inbound Rules**:
   - **HTTP (Port 80)**
@@ -46,7 +46,7 @@ A Target Group ensures your Auto Scaling Group dynamically manages traffic distr
   - **HTTPS (Port 443)**
 - **Note**: You can allow trafic from only LAB Security Group for enhance security.
 
-### Step 3: Create Application Load Balancer (ALB)
+### Step 2.3: Create Application Load Balancer (ALB)
 - **Name**: `prod-nginx-tg-alb`
 - **Type**: Internet-facing
 - **Select VPC**: `prod-vpc`
@@ -56,7 +56,7 @@ A Target Group ensures your Auto Scaling Group dynamically manages traffic distr
   - **Listener**: HTTP (Port 80)
   - **Routing**: Target Group: `prod-nginx-tg`
 
-### Step 4: Create Launch Template
+### Step 2.4: Create Launch Template
 - **Name**: `ec2-auto-scal-launch-tem
 - **Launch template contents**: Quick Start
 - **Network settings**: Select your vpc `prod-vpc`
@@ -83,34 +83,34 @@ echo "<h1>This message from: $(hostname -i)</h1>" > /var/www/html/index.html
 
 ## 3. Auto Scaling Setup
 
-### Step 1: Create Auto Scaling Group
+### Step 3.1: Create Auto Scaling Group
 - **Auto Scaling Group Name**: `um-prod-auto-scaling-group`
 - **Choose Launch Template**: Select the launch template created earlier
 
-### Step 2: Choose Instance Launch Options
+### Step 3.2: Choose Instance Launch Options
 - **Network**: Select VPC `prod-vpc`
 - **Subnets**: Select both subnets `prod-public-subnet-1a` and `prod-public-subnet-1b`
 
-### Step 3: Integrate with Other Services (Optional)
+### Step 33.: Integrate with Other Services (Optional)
 - **Load Balancing**: Select **Existing ALB** (`prod-nginx-tg-alb`) created earlier
 
-### Step 4: Configure Group Size and Scaling
+### Step 3.4: Configure Group Size and Scaling
 - **Group Size**: Set Min, Max, and Desired capacity
 - **Scaling Policy**:
   - Select **Target Tracking Policy** (e.g., Average CPU Utilization)
   - **Target Value**: Set the desired target (e.g., 50% CPU utilization)
   - **Instance Warm-up**: Set the appropriate warm-up time (e.g., 300 seconds)
 
-### Step 5: Add Notifications (Optional)
+### Step 3.5: Add Notifications (Optional)
 - Set up **SNS Topic** for notifications on scaling actions, instance launches, or terminations.
 
-### Step 6: Add Tags (Optional)
+### Step 3.6: Add Tags (Optional)
 - Add tags to your Auto Scaling group (e.g., `Environment=Production`).
 
-### Step 7: Review
+### Step 3.7: Review
 - Review all settings, and then create the Auto Scaling Group.
 
-### Steo 8: Auto Scaling Group & performance testing
+### Steo 3.8: Auto Scaling Group & performance testing
 
 Connect to your EC2 instance and run the following command. The EC2 instances will be automatically provisioned in the Auto Scaling group.
 
