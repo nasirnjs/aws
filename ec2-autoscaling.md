@@ -28,6 +28,7 @@
 ## 2. EC2 Setup
 
 ### Step 1: Create Target Group
+A Target Group ensures your Auto Scaling Group dynamically manages traffic distribution, health checks, and scaling, leading to a reliable, highly available application.
 - **Name**: `prod-nginx-tg`
 - **Configuration**: Keep default settings
 
@@ -63,14 +64,27 @@
 - **Select Security Group**:
 - **Adjust Storage**: As your need 
 - **Advanced network configuration**: Enable Auto-assign Public IP
+- **Advanced details**: Add this script in the `User Data` section to dynamically identify the host.
 
+```bash
+#!/bin/bash
+# Update and install Nginx
+apt update -y
+apt install -y nginx
 
+# Start and enable Nginx service
+systemctl start nginx
+systemctl enable nginx
+
+# Add the private IP address to the index.html file
+echo "<h1>This message from: $(hostname -i)</h1>" > /var/www/html/index.html
+```
 ---
 
 ## 3. Auto Scaling Setup
 
 ### Step 1: Create Auto Scaling Group
-- **Auto Scaling Group Name**: Choose an appropriate name
+- **Auto Scaling Group Name**: `um-prod-auto-scaling-group`
 - **Choose Launch Template**: Select the launch template created earlier
 
 ### Step 2: Choose Instance Launch Options
@@ -96,22 +110,14 @@
 ### Step 7: Review
 - Review all settings, and then create the Auto Scaling Group.
 
+### Steo 8: Auto Scaling Group & performance testing
 
-[Stree CPU](https://stackoverflow.com/questions/2925606/how-to-create-a-cpu-spike-with-a-bash-command)
+Connect to your EC2 instance and run the following command. The EC2 instances will be automatically provisioned in the Auto Scaling group.
+
+Installs the stress tool for CPU, memory, and I/O load testing.\
+`sudo apt install stress`
+
+Runs a CPU stress test using 2 cores for 600 seconds.\
+`stress --cpu 2 --timeout 600`
 
 
-
-```bash
-#!/bin/bash
-# Update and install Nginx
-apt update -y
-apt install -y nginx
-
-# Start and enable Nginx service
-systemctl start nginx
-systemctl enable nginx
-
-# Add the private IP address to the index.html file
-echo "<h1>This message from: $(hostname -i)</h1>" > /var/www/html/index.html
-
-```
