@@ -26,7 +26,7 @@ resource-types:
   # S3
   #- S3Object
   #- S3Bucket
-  # EC2 + EBS/EFS + Load Balancer + ASG
+  - EC2 + EBS/EFS + Load Balancer + ASG
   - EC2Instance
   - EC2NATGateway
   - EC2SpotFleetRequest
@@ -61,12 +61,12 @@ resource-types:
   - ECSTask
   - ECSTaskDefinition
   # Route 53
-  - Route53HealthCheck
-  - Route53HostedZone
-  - Route53ResolverEndpoint
-  - Route53ResolverRule
-  - Route53ResourceRecordSet
-  - Route53TrafficPolicy
+  #- Route53HealthCheck
+  #- Route53HostedZone
+  #- Route53ResolverEndpoint
+  #- Route53ResolverRule
+  #- Route53ResourceRecordSet
+  #- Route53TrafficPolicy
   # cloud front
   - CloudFrontCachePolicy
   - CloudFrontDistribution
