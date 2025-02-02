@@ -10,8 +10,15 @@ List objects in a bucket.\
 List objects recursively in a bucket.\
 `aws s3 ls s3://bucket-name --recursive`
 
+To create an Amazon S3 bucket in a specific region.\
+`aws s3 mb s3://my-new-buckettttttttttttttttttttttttt --region us-east-2`
+
 Get information about a bucket.\
 `aws s3api get-bucket-location --bucket bucket-name`
+
+If the LocationConstraint is null, that means the S3 bucket is located in the US East (N. Virginia) region default region for S3.\
+`aws s3api get-bucket-location --bucket nasirtechtalks.xyz`
+
 
 **Bucket Management**
 
@@ -23,6 +30,7 @@ Delete a bucket.\
 
 Delete a bucket with contents.\
 `aws s3 rb s3://bucket-name --force`
+
 
 **Object Management**
 
