@@ -1,0 +1,127 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "CloudFormation template for creating a VPC with two subnets in each Availability Zone (public and private), an Internet Gateway, and a route table in us-east-1."
+
+Resources:
+  # VPC Creation
+  cloudForVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: "10.0.0.0/16"  # Define a CIDR block for the VPC
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+        - Key: Name
+          Value: "cloudForVPC"
+
+  # Public Subnet 1 Creation (in Availability Zone us-east-1a)
+  publicSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref cloudForVPC  # Reference the VPC created above
+      CidrBlock: "10.0.1.0/24"  # Define a CIDR block for the subnet
+      AvailabilityZone: "us-east-1a"  # Specify the Availability Zone
+      MapPublicIpOnLaunch: true  # Auto-assign public IP to instances launched
+      Tags:
+        - Key: Name
+          Value: "publicSubnet1"
+
+  # Public Subnet 2 Creation (in Availability Zone us-east-1b)
+  publicSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref cloudForVPC  # Reference the VPC created above
+      CidrBlock: "10.0.3.0/24"  # Define a CIDR block for the subnet
+      AvailabilityZone: "us-east-1b"  # Specify the Availability Zone
+      MapPublicIpOnLaunch: true  # Auto-assign public IP to instances launched
+      Tags:
+        - Key: Name
+          Value: "publicSubnet2"
+
+  # Private Subnet 1 Creation (in Availability Zone us-east-1a)
+  privateSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref cloudForVPC  # Reference the VPC created above
+      CidrBlock: "10.0.2.0/24"  # Define a CIDR block for the subnet
+      AvailabilityZone: "us-east-1a"  # Specify the Availability Zone
+      Tags:
+        - Key: Name
+          Value: "privateSubnet1"
+
+  # Private Subnet 2 Creation (in Availability Zone us-east-1b)
+  privateSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref cloudForVPC  # Reference the VPC created above
+      CidrBlock: "10.0.4.0/24"  # Define a CIDR block for the subnet
+      AvailabilityZone: "us-east-1b"  # Specify the Availability Zone
+      Tags:
+        - Key: Name
+          Value: "privateSubnet2"
+
+  # Internet Gateway Creation
+  cloudFormationIGW:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: "cloudFormationIGW"
+
+  # Attach Internet Gateway to VPC
+  AttachInternetGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref cloudForVPC  # Reference the VPC created above
+      InternetGatewayId: !Ref cloudFormationIGW  # Reference the Internet Gateway created above
+
+  # Route Table for Public Subnet
+  MyRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref cloudForVPC  # Reference the VPC created above
+
+  # Route for Public Subnet to Internet Gateway
+  MyPublicRoute:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref MyRouteTable  # Reference the route table created above
+      DestinationCidrBlock: "0.0.0.0/0"  # Route for all traffic
+      GatewayId: !Ref cloudFormationIGW  # Route through the Internet Gateway
+
+  # Associate the Route Table with Public Subnets
+  MyRouteTableAssociation1:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref publicSubnet1  # Reference the public subnet created above
+      RouteTableId: !Ref MyRouteTable  # Reference the route table created above
+
+  MyRouteTableAssociation2:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref publicSubnet2  # Reference the public subnet created above
+      RouteTableId: !Ref MyRouteTable  # Reference the route table created above
+
+Outputs:
+  VPCId:
+    Description: "VPC ID"
+    Value: !Ref cloudForVPC
+
+  PublicSubnet1Id:
+    Description: "Public Subnet 1 ID"
+    Value: !Ref publicSubnet1
+
+  PublicSubnet2Id:
+    Description: "Public Subnet 2 ID"
+    Value: !Ref publicSubnet2
+
+  PrivateSubnet1Id:
+    Description: "Private Subnet 1 ID"
+    Value: !Ref privateSubnet1
+
+  PrivateSubnet2Id:
+    Description: "Private Subnet 2 ID"
+    Value: !Ref privateSubnet2
+
+  InternetGatewayId:
+    Description: "Internet Gateway ID"
+    Value: !Ref cloudFormationIGW
