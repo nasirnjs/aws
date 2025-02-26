@@ -30,7 +30,8 @@ An EC2 Auto Scaling Group (ASG) is a feature in AWS that automatically adjusts t
 ### Step 2.1: Create Target Group
 A Target Group ensures your Auto Scaling Group dynamically manages traffic distribution, health checks, and scaling, leading to a reliable, highly available application.
 - **Name**: `prod-nginx-tg`
-- **Configuration**: Keep default settings
+- **Select your VPC**: `prod-vpc`
+- **Configuration**: Keep others default settings
 
 ### Step 2.2: Create 2 Security Group for ALB & EC2 Auto Scaling Group
 - **Name**: `prod-alb-sg` (for ALB)
@@ -57,7 +58,7 @@ A Target Group ensures your Auto Scaling Group dynamically manages traffic distr
   - **Routing**: Target Group: `prod-nginx-tg`
 
 ### Step 2.4: Create Launch Template
-- **Name**: `ec2-auto-scal-launch-tem
+- **Name**: `ec2-auto-scal-launch-tem`
 - **Launch template contents**: Quick Start
 - **Network settings**: Select your vpc `prod-vpc`
 - **Subnet**: Do not select (Auto Scaling will handle it)
